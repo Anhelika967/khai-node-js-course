@@ -16,4 +16,9 @@ router.post('/products', async (request, response) => {
 
 });
 
+router.get('/products', async (request, response) => {
+    const products = await db.query.products.findMany();
+    return response.json(products);
+});
+
 module.exports = router;

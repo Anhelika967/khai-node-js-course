@@ -1,11 +1,9 @@
 const express = require('express');
 
 const db = require('../db');
-
-const { users } = require('../db/schema');
-
 const router = express.Router();
-
+const { eq } = require('drizzle-orm');
+const { users, products } = require('../db/schema');
 
 // handle get request for path /users
 
@@ -20,10 +18,17 @@ router.post('/users', async (request, response) => {
 });
 router.get('/users', async (request, response) => {
 
-   const users = await db.query.users.findMany();
-
-   return response.json(users);
-
+    const users = await db.query.users.findMany();
+ 
+    return response.json(users);
+ 
+ });
+ router.get('/users/:id/products', async (request, response) => {
+   const { id } = request.params;
+   const userProdusts = await db.query.products.findMany({
+       where: eq(products.userId, +id)
+   });
+   return response.json(userProdusts);
 });
 
 module.exports = router;
